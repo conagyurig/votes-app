@@ -1,14 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Topics from "./components/Topics";
 import Note from "./components/Note";
 import Chapters from "./components/Chapters";
 import { ThemeProvider } from "./components/theme-provider";
 import { Navigation } from "./components/Navigation";
-import { useState } from "react";
 
 const App: React.FC = () => {
-  const [nextChapter, setNextChapter] = useState<string>("");
-  const [lastChapter, setLastChapter] = useState<string>("");
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Router>
@@ -24,3 +21,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+export const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000";

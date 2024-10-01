@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { toTitleCase } from "./Navigation";
+import { apiUrl } from "@/App";
 
 export interface Files {
   files: string[];
@@ -16,9 +17,7 @@ const Chapters: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:8000/api/list?folder=" + chapter
-        );
+        const response = await fetch(apiUrl + "/api/list?folder=" + chapter);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

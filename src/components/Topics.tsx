@@ -9,6 +9,7 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import { toTitleCase } from "./Navigation";
+import { apiUrl } from "@/App";
 
 const Topics: React.FC = () => {
   const [data, setData] = useState<string[]>([]);
@@ -17,7 +18,7 @@ const Topics: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/folders");
+        const response = await fetch(apiUrl + "/api/folders");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
