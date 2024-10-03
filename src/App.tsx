@@ -11,6 +11,7 @@ const App: React.FC = () => {
       <Router>
         <Navigation />
         <Routes>
+          <Route path="/" element={<Topics />} />
           <Route path="/Topics" element={<Topics />} />
           <Route path="/Chapters" element={<Chapters />} />
           <Route path="/Note" element={<Note />} />
@@ -21,5 +22,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-export const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000";

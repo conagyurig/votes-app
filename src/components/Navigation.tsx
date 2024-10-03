@@ -13,7 +13,6 @@ import {
 import { ModeToggle } from "./mode-toggle";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { apiUrl } from "@/App";
 
 export function Navigation() {
   const [data, setData] = useState<string[]>([]);
@@ -21,7 +20,7 @@ export function Navigation() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(apiUrl + "/api/folders");
+        const response = await fetch("/api/folders");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

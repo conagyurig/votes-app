@@ -9,7 +9,6 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import { toTitleCase } from "./Navigation";
-import { apiUrl } from "@/App";
 
 const Topics: React.FC = () => {
   const [data, setData] = useState<string[]>([]);
@@ -18,7 +17,7 @@ const Topics: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(apiUrl + "/api/folders");
+        const response = await fetch("/api/folders");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -35,9 +34,7 @@ const Topics: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-center text-xl font-bold mb-6">
-        Welcome to the Topics Page
-      </h1>
+      <h1 className="text-center text-xl font-bold mb-6">Topics</h1>
       <main className="flex items-center justify-center h-screen">
         <div className="w-full max-w-4xl">
           {error ? <p>Error: {error}</p> : null}
@@ -74,7 +71,7 @@ const Topics: React.FC = () => {
               <CarouselNext />
             </Carousel>
           ) : (
-            <p>No topics found.</p>
+            <p>Loading</p>
           )}
         </div>
       </main>

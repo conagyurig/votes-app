@@ -6,7 +6,6 @@ import { toTitleCase } from "./Navigation";
 import ImageContainer from "./ui/imageCard";
 import { Files, processFiles } from "./Chapters";
 import { Separator } from "./ui/separator";
-import { apiUrl } from "@/App";
 
 const Note: React.FC = () => {
   const [content, setContent] = useState<JSX.Element>(<div></div>);
@@ -19,12 +18,12 @@ const Note: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const file = await fetch(apiUrl + "/api/download?filename=" + title);
+        const file = await fetch("/api/download?filename=" + title);
         if (!file.ok) {
           throw new Error("Network response was not ok");
         }
         const chapters = await fetch(
-          apiUrl + "/api/list?folder=" + title?.split("/")[0]
+          "/api/list?folder=" + title?.split("/")[0]
         );
         if (!chapters.ok) {
           throw new Error("Network response was not ok");
@@ -69,7 +68,7 @@ const Note: React.FC = () => {
           </div>
         </ul>
       ) : (
-        <p>No chapters found.</p>
+        <p>Loading</p>
       )}
     </div>
   );
@@ -92,10 +91,7 @@ function processContent(text: string) {
             <div className="flex flex-col items-center justify-center">
               <ImageContainer
                 key={`image-${i}`}
-                src={
-                  "http://localhost:8000/api/download?filename=surfaces/" +
-                  matches[i]
-                }
+                src={"/api/download?filename=surfaces/" + matches[i]}
               />
             </div>
           )}
