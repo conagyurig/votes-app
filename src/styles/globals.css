@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* hsl(222, 71%, 5%) */
-/* hsl(222, 92%, 5%) */
-
 @layer base {
   :root {
     --background: 0 0% 100%;

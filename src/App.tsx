@@ -1,23 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Topics from "./components/Topics";
-import Note from "./components/Note";
-import Chapters from "./components/Chapters";
-import { ThemeProvider } from "./components/theme-provider";
-import { Navigation } from "./components/Navigation";
+import Chat from "./components/Chat";
+import CreateRoom from "./components/CreateRoom";
+import CreateUser from "./components/CreateUser";
+import WaitToVotePage from "./components/WaitToVote";
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Router>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Topics />} />
-          <Route path="/Topics" element={<Topics />} />
-          <Route path="/Chapters" element={<Chapters />} />
-          <Route path="/Note" element={<Note />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Chat />} />
+        <Route path="/create-room" element={<CreateRoom />} />
+        <Route path="/create-user" element={<CreateUser />} />
+        <Route path="/wait-to-vote" element={<WaitToVotePage />} />
+      </Routes>
+    </Router>
   );
 };
 
