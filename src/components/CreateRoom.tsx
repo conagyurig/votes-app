@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 export interface Room {
   id: string;
@@ -13,12 +15,13 @@ export interface createRoomRequest {
 const CreateRoom: React.FC = () => {
   const [roomName, setRoomName] = useState<string>("");
   const [roomID, setRoomID] = useState<string | undefined>(undefined);
-  const [error, setError] = useState<string>("");
+  const [_, setError] = useState<string>("");
+  const navigate = useNavigate();
 
   const requestCreateRoom = async () => {
     try {
       const requestBody: createRoomRequest = { roomName: roomName };
-      const response = await fetch("http://localhost:8080/rooms", {
+      const response = await fetch("/api/rooms", {
         method: "POST",
         body: JSON.stringify(requestBody),
       });
@@ -28,6 +31,7 @@ const CreateRoom: React.FC = () => {
       const result: Room = await response.json();
       setRoomID(result.id);
       console.log(result);
+      navigate("/create-user" + "?roomID=" + result.id);
     } catch (err: any) {
       setError(err.message);
       console.error(err);
@@ -35,23 +39,25 @@ const CreateRoom: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Create Room</h1>
-      <div style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Enter your room name"
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
-          style={{ marginRight: "10px" }}
-        />
-        {!roomID && (
-          <button onClick={() => requestCreateRoom()}>Create New Room</button>
-        )}
+    <div className="flex justify-center items-center">
+      <div>
+        <h1 className="text-2xl text-center pt-8 pb-60">Create Room</h1>
+        <div className="flex flex-col">
+          <h2>
+            Room Name: <span className="text-red-700">*</span>
+          </h2>
+          <Input
+            type="text"
+            placeholder="Enter your room name"
+            value={roomName}
+            onChange={(e) => setRoomName(e.target.value)}
+            className="mb-4"
+          />
+          {!roomID && (
+            <Button onClick={() => requestCreateRoom()}>Create</Button>
+          )}
+        </div>
       </div>
-      {roomID && (
-        <Link to={"/create-user" + "?roomID=" + roomID}>Create User</Link>
-      )}
     </div>
   );
 };

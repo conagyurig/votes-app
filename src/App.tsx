@@ -1,17 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Chat from "./components/Chat";
 import CreateRoom from "./components/CreateRoom";
 import CreateUser from "./components/CreateUser";
 import WaitToVotePage from "./components/WaitToVote";
+import Results from "./components/Results";
+import Availability from "./components/Availability";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Chat />} />
-        <Route path="/create-room" element={<CreateRoom />} />
+        <Route path="/" element={<CreateRoom />} />
         <Route path="/create-user" element={<CreateUser />} />
+        <Route path="/availability" element={<Availability />} />
         <Route path="/wait-to-vote" element={<WaitToVotePage />} />
+        <Route path="/results" element={<Results />} />
       </Routes>
     </Router>
   );

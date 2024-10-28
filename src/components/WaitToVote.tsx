@@ -3,6 +3,7 @@ import { User } from "./CreateUser";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
+import { Card } from "./ui/card";
 
 interface Option {
   id: string;
@@ -54,7 +55,7 @@ const WaitToVotePage: React.FC = () => {
       roomState.users &&
       roomState.votes.length === roomState.users.length
     ) {
-      navigate("/new-page");
+      navigate("/results?roomID=" + roomID + "&userID=" + userID);
     }
   }, [roomState, navigate]);
 
@@ -62,9 +63,7 @@ const WaitToVotePage: React.FC = () => {
     const fetchRoomState = async () => {
       try {
         if (roomID) {
-          const response = await fetch(
-            "http://localhost:8080/roomState?roomID=" + roomID
-          );
+          const response = await fetch("/api/roomState?roomID=" + roomID);
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }
@@ -77,7 +76,10 @@ const WaitToVotePage: React.FC = () => {
     };
     fetchRoomState();
     ws.current = new WebSocket(
-      "ws://localhost:8080/ws?roomID=" + roomID + "&userID=" + userID
+      "wss://whenru3-be-252801953050.europe-west2.run.app/ws?roomID=" +
+        roomID +
+        "&userID=" +
+        userID
     );
 
     ws.current.onopen = () => {
@@ -121,38 +123,58 @@ const WaitToVotePage: React.FC = () => {
   }, [roomState]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Vote</h1>
-      {roomState && (
-        <div>
-          <h2>{"Room name: " + roomState.roomName}</h2>
+    <div className="flex justify-center items-center">
+      <div>
+        <h1 className="text-2xl text-center pt-8 pb-20">Vote</h1>
+        {roomState && (
           <div>
-            <RadioGroup
-              value={option}
-              onValueChange={handleOptionChange}
-              className="flex flex-col space-y-1"
-            >
-              {roomState.options.map((option) => (
-                <div className="flex items-center space-x-2" key={option.id}>
-                  <RadioGroupItem value={option.id} id="r1" />
-                  <Label htmlFor="r1">{option.content}</Label>
-                </div>
+            <h2 className="text-lg mb-4">{"Room: " + roomState.roomName}</h2>
+            <div className="">
+              <RadioGroup
+                value={option}
+                onValueChange={handleOptionChange}
+                className="space-y-4"
+              >
+                {roomState.options.map((option) => (
+                  <div className="flex items-center space-x-4" key={option.id}>
+                    <button
+                      onClick={() => {
+                        handleOptionChange(option.id);
+                      }}
+                    >
+                      <Card className="w-full p-3 border border-gray-300 rounded-lg hover:shadow-lg transition-shadow">
+                        <div className="flex items-center">
+                          <RadioGroupItem
+                            value={option.id}
+                            id={option.id}
+                            className="focus:ring-2 focus:ring-blue-500"
+                          />
+                          <Label className="ml-4 text-m">
+                            {option.content}
+                          </Label>
+                        </div>
+                      </Card>
+                    </button>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <h3 className="text-lg mt-10">Users:</h3>
+            <ul>
+              {roomState.users.map((user) => (
+                <li key={user.id} className="flex items-center space-x-2">
+                  <span>{user.name}</span>
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      findVoteCheck(user.id) ? "bg-green-500" : "bg-red-500"
+                    }`}
+                  ></div>
+                </li>
               ))}
-            </RadioGroup>
+            </ul>
           </div>
-          <h3>Users in room:</h3>
-          <ul>
-            {roomState.users.map((user) => (
-              <li key={user.id}>
-                <span>
-                  {user.name}
-                  <div>{findVoteCheck(user.id) ? "based" : "cringe"}</div>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
