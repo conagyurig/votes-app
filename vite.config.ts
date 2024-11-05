@@ -17,7 +17,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://whenru3-be-252801953050.europe-west2.run.app/",
+        // target: "https://whenru3-be-252801953050.europe-west2.run.app/",
+        target: "http://localhost:8080/",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),

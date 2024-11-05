@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { jwtDecode } from "jwt-decode";
 import { User } from "./CreateUser";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
@@ -25,16 +26,29 @@ interface RoomState {
   votes: Vote[];
 }
 
+export interface TokenPayload {
+  userID: string;
+  roomID: string;
+}
+
 const WaitToVotePage: React.FC = () => {
   const [roomState, setRoomState] = useState<RoomState | undefined>(undefined);
   const [option, setOption] = useState<string | undefined>(undefined);
+  const [userID, setUserID] = useState<string | undefined>(undefined);
 
   const ws = useRef<WebSocket | null>(null);
   const navigate = useNavigate();
 
   let [searchParams] = useSearchParams();
   let roomID = searchParams.get("roomID");
-  let userID = searchParams.get("userID");
+  const userToken = roomID ? localStorage.getItem(roomID) : "";
+
+  useEffect(() => {
+    if (roomID && userToken && userToken.length != 0) {
+      const decoded = jwtDecode<TokenPayload>(userToken);
+      setUserID(decoded.userID);
+    }
+  }, []);
 
   const handleOptionChange = (value: string) => {
     setOption(value);
@@ -55,7 +69,7 @@ const WaitToVotePage: React.FC = () => {
       roomState.users &&
       roomState.votes.length === roomState.users.length
     ) {
-      navigate("/results?roomID=" + roomID + "&userID=" + userID);
+      navigate("/results?roomID=" + roomID);
     }
   }, [roomState, navigate]);
 
@@ -63,7 +77,11 @@ const WaitToVotePage: React.FC = () => {
     const fetchRoomState = async () => {
       try {
         if (roomID) {
-          const response = await fetch("/api/roomState?roomID=" + roomID);
+          const response = await fetch("/api/roomState?roomID=" + roomID, {
+            headers: new Headers({
+              Authorization: "Bearer " + userToken,
+            }),
+          });
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }
@@ -74,37 +92,37 @@ const WaitToVotePage: React.FC = () => {
         console.error(err);
       }
     };
-    fetchRoomState();
-    ws.current = new WebSocket(
-      "wss://whenru3-be-252801953050.europe-west2.run.app/ws?roomID=" +
-        roomID +
-        "&userID=" +
-        userID
-    );
+    if (userToken) {
+      fetchRoomState();
+      const encodedToken = encodeURIComponent(userToken);
+      ws.current = new WebSocket(
+        // "wss://whenru3-be-252801953050.europe-west2.run.app/ws?roomID=" +
+        "ws://localhost:8080/ws?roomID=" + roomID + "&token=" + encodedToken
+      );
 
-    ws.current.onopen = () => {
-      console.log("WebSocket connection established");
-    };
+      ws.current.onopen = () => {
+        console.log("WebSocket connection established");
+      };
 
-    ws.current.onmessage = (event: MessageEvent) => {
-      const data = JSON.parse(event.data) as RoomState;
-      setRoomState(data);
-    };
+      ws.current.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data) as RoomState;
+        setRoomState(data);
+      };
 
-    ws.current.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+      ws.current.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
 
-    ws.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
+      ws.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+    }
     return () => {
       if (ws.current) {
         ws.current.close();
       }
     };
-  }, [roomID, userID]);
+  }, [roomID, userToken]);
 
   function findVoteCheck(userId: string) {
     return roomState?.votes?.some((vote) => vote.userId === userId) ?? false;
