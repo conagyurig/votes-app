@@ -65,52 +65,46 @@ const CreateUser: React.FC = () => {
   };
 
   return (
-    <div>
-      <div className="flex pt-8">
-        <ChevronLeft />
-        Back
-      </div>
-      <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-xl min-w-[200px] px-20">
+        <h1 className="text-2xl text-center pt-8 pb-20">Create User</h1>
         <div>
-          <h1 className="text-2xl text-center pt-8 pb-40">Create User</h1>
-          <div className="mx-20">
-            <h2>
-              Choose your display name: <span className="text-red-700">*</span>
-            </h2>
-            <Input
-              type="text"
-              placeholder="Enter your name"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="mb-4"
-            />
-            <h2>
-              Suggest an event: <span className="text-red-700">*</span>
-            </h2>
-            <Input
-              type="text"
-              placeholder="Enter your option"
-              value={option}
-              onChange={(e) => setOption(e.target.value)}
-              className="mb-4"
-            />
-            <Button onClick={requestCreateUserWithOption}>Continue</Button>
-          </div>
-          <div className="pt-40 mx-6 ">
-            <h3 className="text-lg font-bold">Your room link: </h3>
-            <div>
-              <p
-                onClick={handleCopy}
-                style={{
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                }}
-                className="text-sm font-mono break-all w-full"
-              >
-                {roomURL}
-              </p>
-              <Copy />
-            </div>
+          <h2>
+            Choose your display name: <span className="text-red-700">*</span>
+          </h2>
+          <Input
+            type="text"
+            placeholder="Enter your name"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="mb-4"
+          />
+          <h2>
+            Suggest an event: <span className="text-red-700">*</span>
+          </h2>
+          <Input
+            type="text"
+            placeholder="Enter your option"
+            value={option}
+            onChange={(e) => setOption(e.target.value)}
+            className="mb-4"
+          />
+          <Button onClick={requestCreateUserWithOption}>Continue</Button>
+        </div>
+        <div className="pt-20">
+          <h3 className="text-lg font-bold">Your room link: </h3>
+          <div>
+            <p
+              onClick={handleCopy}
+              style={{
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              className="text-sm font-mono break-all w-full"
+            >
+              {roomURL}
+            </p>
+            <Copy />
           </div>
         </div>
       </div>

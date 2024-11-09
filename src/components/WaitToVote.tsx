@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Card } from "./ui/card";
+import { Button } from "./ui/button";
 
 interface Option {
   id: string;
@@ -24,6 +25,7 @@ interface RoomState {
   users: User[];
   options: Option[];
   votes: Vote[];
+  revealVotes: boolean;
 }
 
 export interface TokenPayload {
@@ -62,16 +64,18 @@ const WaitToVotePage: React.FC = () => {
     }
   }, [option]);
 
-  useEffect(() => {
+  const revealVotes = async () => {
     if (
       roomState &&
-      roomState.votes &&
-      roomState.users &&
-      roomState.votes.length === roomState.users.length
+      roomState.users?.length > 1 &&
+      ws.current &&
+      ws.current.readyState === WebSocket.OPEN
     ) {
-      navigate("/results?roomID=" + roomID);
+      const message = JSON.stringify({ type: "revealVotes" });
+      ws.current.send(message);
+      // navigate("/results?roomID=" + roomID);
     }
-  }, [roomState, navigate]);
+  };
 
   useEffect(() => {
     const fetchRoomState = async () => {
@@ -107,6 +111,9 @@ const WaitToVotePage: React.FC = () => {
       ws.current.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data) as RoomState;
         setRoomState(data);
+        if (data.revealVotes == true) {
+          navigate("/results?roomID=" + roomID);
+        }
       };
 
       ws.current.onclose = () => {
@@ -141,11 +148,11 @@ const WaitToVotePage: React.FC = () => {
   }, [roomState]);
 
   return (
-    <div className="flex justify-center items-center">
-      <div>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-xl min-w-[200px] px-20">
         <h1 className="text-2xl text-center pt-8 pb-20">Vote</h1>
         {roomState && (
-          <div>
+          <div className="flex justify-center items-center flex-col">
             <h2 className="text-lg mb-4">{"Room: " + roomState.roomName}</h2>
             <div className="">
               <RadioGroup
@@ -190,6 +197,9 @@ const WaitToVotePage: React.FC = () => {
                 </li>
               ))}
             </ul>
+            <Button className="mt-10 max-w-min" onClick={revealVotes}>
+              Reveal Votes
+            </Button>
           </div>
         )}
       </div>

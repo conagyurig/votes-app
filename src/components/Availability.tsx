@@ -69,36 +69,38 @@ const Availability: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="w-full max-w-md text-center">
-        <h1 className="text-2xl pt-8 pb-20">Availability</h1>
-        <div className="mx-10">
-          <h2 className="mb-4">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-xl min-w-[200px] px-10">
+        <h1 className="text-2xl text-center pt-8 pb-20">Availability</h1>
+        <div className="flex justify-center items-center flex-col">
+          <h2 className="mb-4 text-center">
             Choose your availability: <span className="text-red-700">*</span>
           </h2>
+
           <Calendar
             mode="multiple"
             selected={dates}
             onSelect={setDates}
             className="rounded-md border mx-auto mb-4"
           />
-          <Button onClick={requestCreateUserWithOption}>Continue</Button>
+          <Button className="max-w-min" onClick={requestCreateUserWithOption}>
+            Continue
+          </Button>
         </div>
-      </div>
-
-      <div className="w-full px-6 mt-10 text-left overflow-x-auto">
-        <h3 className="text-lg font-bold">Your room link:</h3>
-        <div className="text-sm font-mono break-all w-full">
-          <p
-            onClick={handleCopy}
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-            className="text-sm font-mono break-all w-full"
-          >
-            {roomURL}
-          </p>
+        <div className="w-full px-6 mt-10 text-left overflow-x-auto">
+          <h3 className="text-lg font-bold">Your room link:</h3>
+          <div className="text-sm font-mono break-all w-full">
+            <p
+              onClick={handleCopy}
+              style={{
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              className="text-sm font-mono break-all w-full"
+            >
+              {roomURL}
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import {
 } from "./ui/barChart";
 import { jwtDecode } from "jwt-decode";
 import { TokenPayload } from "./WaitToVote";
+import { HorizontalBarChartComponent } from "./ui/horizontalBarChart";
 
 interface Option {
   id: string;
@@ -134,30 +135,43 @@ const Results: React.FC = () => {
   }, [datesState]);
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <h1 className="text-2xl text-center pt-8 pb-20">Results</h1>
-      <div>
-        {roomState && (
-          <div>
-            <div className="mb-4">
-              {pieChartProps && <PieChartComponent {...pieChartProps} />}
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-xl min-w-[200px] px-2">
+        <h1 className="text-2xl text-center pt-8 pb-10">Results</h1>
+        <div>
+          {roomState && (
+            <div>
+              <div className="mb-4">
+                {pieChartProps && <PieChartComponent {...pieChartProps} />}
+              </div>
             </div>
+          )}
+          {datesState && (
+            <div>
+              {barChartProps && (
+                <div>
+                  <HorizontalBarChartComponent {...barChartProps} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="w-full px-6 mt-10 text-left overflow-x-auto">
+          <h3 className="text-lg font-bold">Your room link:</h3>
+          <div className="text-sm font-mono break-all w-full">
+            <p
+              onClick={handleCopy}
+              style={{
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              className="text-sm font-mono break-all w-full"
+            >
+              {roomURL}
+            </p>
           </div>
-        )}
-        {datesState && (
-          <div>{barChartProps && <BarChartComponent {...barChartProps} />}</div>
-        )}
+        </div>
       </div>
-      <p
-        className="text-sm font-mono break-all w-full"
-        onClick={handleCopy}
-        style={{
-          cursor: "pointer",
-          textDecoration: "underline",
-        }}
-      >
-        {roomURL}
-      </p>
     </div>
   );
 };
@@ -182,7 +196,6 @@ function constructPieChartProps(roomState: RoomState) {
   return pieChartProps;
 }
 
-// sort and show only top x dates
 function constructBarChartProps(datesState: DatesState) {
   let barChartProps: BarChartProps = {
     dates: [],

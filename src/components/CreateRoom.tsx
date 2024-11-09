@@ -21,6 +21,7 @@ const CreateRoom: React.FC = () => {
 
   const requestCreateRoom = async () => {
     setLoading(true);
+    console.log(loading);
     try {
       const requestBody: CreateRoomRequest = { roomName };
       const response = await fetch(API_ROOMS_ENDPOINT, {
@@ -42,31 +43,29 @@ const CreateRoom: React.FC = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-center items-center">
-        <div>
-          <h1 className="text-2xl text-center pt-8 pb-40">Create Room</h1>
-          <div className="flex flex-col">
-            <h2>
-              Room Name: <span className="text-red-700">*</span>
-            </h2>
-            <Input
-              type="text"
-              placeholder="Enter your room name"
-              value={roomName}
-              onChange={(e) => setRoomName(e.target.value)}
-              className="mb-4"
-            />
-            <Button className="mb-10" onClick={requestCreateRoom}>
-              Create
-            </Button>
-            <div>
-              <div>{"Steps"}</div>
-              <div>{"1) Create a room"}</div>
-              <div>{"2) Create your user"}</div>
-              <div>{"3) Add your availability"}</div>
-              <div>{"4) Vote on an event"}</div>
-            </div>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="w-full max-w-xl min-w-[200px] px-20">
+        <h1 className="text-2xl text-center pt-8 pb-20">Create Room</h1>
+        <div className="flex flex-col">
+          <h2>
+            Room Name: <span className="text-red-700">*</span>
+          </h2>
+          <Input
+            type="text"
+            placeholder="Enter your room name"
+            value={roomName}
+            onChange={(e) => setRoomName(e.target.value)}
+            className="mb-4"
+          />
+          <Button className="mb-10" onClick={requestCreateRoom}>
+            Create
+          </Button>
+          <div>
+            <div>{"Steps"}</div>
+            <div>{"1) Create a room"}</div>
+            <div>{"2) Create your user"}</div>
+            <div>{"3) Add your availability"}</div>
+            <div>{"4) Vote for an event"}</div>
           </div>
         </div>
       </div>
