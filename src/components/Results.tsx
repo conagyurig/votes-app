@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { User } from "./CreateUser";
 import { useSearchParams } from "react-router-dom";
 import { ChartOption, PieChartComponent, PieChartProps } from "./ui/pie-chart";
-import {
-  BarChartComponent,
-  BarChartOption,
-  BarChartProps,
-} from "./ui/barChart";
+import { BarChartOption, BarChartProps } from "./ui/barChart";
 import { jwtDecode } from "jwt-decode";
 import { TokenPayload } from "./WaitToVote";
 import { HorizontalBarChartComponent } from "./ui/horizontalBarChart";
@@ -57,10 +53,6 @@ const Results: React.FC = () => {
   let roomID = searchParams.get("roomID");
   const userToken = roomID ? localStorage.getItem(roomID) : "";
 
-  const roomURL =
-    "https://whenru3-be-252801953050.europe-west2.run.app/create-user?roomID=" +
-    roomID;
-
   useEffect(() => {
     if (roomID && userToken && userToken.length != 0) {
       const decoded = jwtDecode<TokenPayload>(userToken);
@@ -68,16 +60,6 @@ const Results: React.FC = () => {
     }
   }, []);
 
-  const handleCopy = () => {
-    navigator.clipboard
-      .writeText(roomURL)
-      .then(() => {
-        alert("Text copied to clipboard!");
-      })
-      .catch((error) => {
-        console.error("Failed to copy text: ", error);
-      });
-  };
   useEffect(() => {
     const fetchRoomState = async () => {
       try {
@@ -155,21 +137,6 @@ const Results: React.FC = () => {
               )}
             </div>
           )}
-        </div>
-        <div className="w-full px-6 mt-10 text-left overflow-x-auto">
-          <h3 className="text-lg font-bold">Your room link:</h3>
-          <div className="text-sm font-mono break-all w-full">
-            <p
-              onClick={handleCopy}
-              style={{
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
-              className="text-sm font-mono break-all w-full"
-            >
-              {roomURL}
-            </p>
-          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-import { TrendingUp } from "lucide-react";
 import { Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
@@ -41,6 +40,14 @@ export function PieChartComponent({ options }: PieChartProps) {
     return config;
   }, {} as ChartConfig);
 
+  const maxVotes = getMax(options);
+
+  const topOptions = options.map((option) => {
+    if (option.votes == maxVotes) {
+      return option;
+    }
+  });
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
@@ -72,7 +79,29 @@ export function PieChartComponent({ options }: PieChartProps) {
             />
           </PieChart>
         </ChartContainer>
+        <CardFooter className="flex flex-col justify-center items-center gap-2 text-sm">
+          <div>Top Voted:</div>
+          {topOptions && (
+            <div>
+              {topOptions.map((option) => (
+                <div className="flex gap-2 font-medium leading-none">
+                  {option?.content}
+                </div>
+              ))}
+            </div>
+          )}
+        </CardFooter>
       </CardContent>
     </Card>
   );
+}
+
+function getMax(chartProps: ChartOption[]) {
+  let maxVal = 0;
+  for (let i = 0; i < chartProps.length; i++) {
+    if (chartProps[i].votes > maxVal) {
+      maxVal = chartProps[i].votes;
+    }
+  }
+  return maxVal;
 }

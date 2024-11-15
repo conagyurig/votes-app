@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DotLoader from "react-spinners/DotLoader";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { API_ROOMS_ENDPOINT } from "@/utils/constants";
+import toast from "react-hot-toast";
 
 export interface Room {
   id: string;
@@ -20,8 +22,11 @@ const CreateRoom: React.FC = () => {
   const navigate = useNavigate();
 
   const requestCreateRoom = async () => {
+    if (roomName.length == 0) {
+      toast.error("Please fill in required fields");
+      return;
+    }
     setLoading(true);
-    console.log(loading);
     try {
       const requestBody: CreateRoomRequest = { roomName };
       const response = await fetch(API_ROOMS_ENDPOINT, {
@@ -67,6 +72,11 @@ const CreateRoom: React.FC = () => {
             <div>{"3) Add your availability"}</div>
             <div>{"4) Vote for an event"}</div>
           </div>
+          {loading && (
+            <div className="fixed inset-0 flex items-center justify-center z-50 bg-white bg-opacity-70">
+              <DotLoader color={"#591c87"} />
+            </div>
+          )}
         </div>
       </div>
     </div>

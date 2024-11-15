@@ -6,6 +6,8 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import CopyURL from "./ui/copyURL";
+import { getRoomURL } from "@/utils/constants";
 
 interface Option {
   id: string;
@@ -42,8 +44,10 @@ const WaitToVotePage: React.FC = () => {
   const navigate = useNavigate();
 
   let [searchParams] = useSearchParams();
-  let roomID = searchParams.get("roomID");
+  let roomID = searchParams.get("roomID") ?? "";
   const userToken = roomID ? localStorage.getItem(roomID) : "";
+
+  const roomURL = getRoomURL(roomID);
 
   useEffect(() => {
     if (roomID && userToken && userToken.length != 0) {
@@ -54,7 +58,6 @@ const WaitToVotePage: React.FC = () => {
 
   const handleOptionChange = (value: string) => {
     setOption(value);
-    console.log("Selected option:", value);
   };
 
   useEffect(() => {
@@ -73,7 +76,6 @@ const WaitToVotePage: React.FC = () => {
     ) {
       const message = JSON.stringify({ type: "revealVotes" });
       ws.current.send(message);
-      // navigate("/results?roomID=" + roomID);
     }
   };
 
@@ -100,8 +102,11 @@ const WaitToVotePage: React.FC = () => {
       fetchRoomState();
       const encodedToken = encodeURIComponent(userToken);
       ws.current = new WebSocket(
-        // "wss://whenru3-be-252801953050.europe-west2.run.app/ws?roomID=" +
-        "ws://localhost:8080/ws?roomID=" + roomID + "&token=" + encodedToken
+        "wss://whenru3-be-252801953050.europe-west2.run.app/ws?roomID=" +
+          // "ws://localhost:8080/ws?roomID=" +
+          roomID +
+          "&token=" +
+          encodedToken
       );
 
       ws.current.onopen = () => {
@@ -202,6 +207,7 @@ const WaitToVotePage: React.FC = () => {
             </Button>
           </div>
         )}
+        <CopyURL roomURL={roomURL} />
       </div>
     </div>
   );

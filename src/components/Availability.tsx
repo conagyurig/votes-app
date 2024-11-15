@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { API_AVAILABILITY_ENDPOINT, getRoomURL } from "@/utils/constants";
+import CopyURL from "./ui/copyURL";
 
 export interface User {
   id: string;
@@ -26,17 +27,6 @@ const Availability: React.FC = () => {
   const userToken = roomID ? localStorage.getItem(roomID) : "";
 
   const roomURL = getRoomURL(roomID);
-
-  const handleCopy = () => {
-    navigator.clipboard
-      .writeText(roomURL)
-      .then(() => {
-        alert("Text copied to clipboard!");
-      })
-      .catch((error) => {
-        console.error("Failed to copy text: ", error);
-      });
-  };
 
   const requestCreateUserWithOption = async () => {
     if (dates) {
@@ -87,20 +77,8 @@ const Availability: React.FC = () => {
             Continue
           </Button>
         </div>
-        <div className="w-full px-6 mt-10 text-left overflow-x-auto">
-          <h3 className="text-lg font-bold">Your room link:</h3>
-          <div className="text-sm font-mono break-all w-full">
-            <p
-              onClick={handleCopy}
-              style={{
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
-              className="text-sm font-mono break-all w-full"
-            >
-              {roomURL}
-            </p>
-          </div>
+        <div>
+          <CopyURL roomURL={roomURL} />
         </div>
       </div>
     </div>
