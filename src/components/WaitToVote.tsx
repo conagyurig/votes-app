@@ -31,8 +31,8 @@ interface RoomState {
 }
 
 export interface TokenPayload {
-  userID: string;
-  roomID: string;
+  user_id: string;
+  room_id: string;
 }
 
 const WaitToVotePage: React.FC = () => {
@@ -52,7 +52,7 @@ const WaitToVotePage: React.FC = () => {
   useEffect(() => {
     if (roomID && userToken && userToken.length != 0) {
       const decoded = jwtDecode<TokenPayload>(userToken);
-      setUserID(decoded.userID);
+      setUserID(decoded.user_id);
     }
   }, []);
 

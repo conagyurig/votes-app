@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { API_USER_ENDPOINT, getRoomURL } from "@/utils/constants";
+import {
+  API_USER_ENDPOINT,
+  autoSuggestions,
+  getRoomURL,
+} from "@/utils/constants";
 import toast from "react-hot-toast";
 import CopyURL from "./ui/copyURL";
 import { ArrowLeft, RefreshCwIcon } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
+import { TokenPayload } from "./WaitToVote";
 
 export interface User {
   id: string;
@@ -19,60 +25,6 @@ export interface CreateUserRequest {
   optionContent: string;
 }
 
-const autoSuggestions = [
-  "bar",
-  "club",
-  "spoons", // Wetherspoons pub
-  "dinner",
-  "library",
-  "cafe",
-  "karaoke night",
-  "bowling",
-  "cinema",
-  "escape room",
-  "pub quiz night",
-  "bottomless brunch",
-  "house party",
-  "theatre show",
-  "food market",
-  "live gig",
-  "board game cafe",
-  "open mic night",
-  "charity fundraiser night",
-  "football match",
-  "rugby match",
-  "comedy club",
-  "theme park day trip",
-  "paintball",
-  "go-karting",
-  "street food festival",
-  "beach day",
-  "bingo night",
-  "art exhibition",
-  "museum visit",
-  "salsa dancing class",
-  "roller disco",
-  "mini golf",
-  "afternoon tea",
-  "hiking trip",
-  "cultural food tour",
-  "trampoline park",
-  "shopping spree",
-  "afternoon pub crawl",
-  "silent disco",
-  "gaming arcade",
-  "charity fun run",
-  "pottery class",
-  "ghost tour",
-  "whisky tasting",
-  "sports club social",
-  "pool or snooker night",
-  "spa day",
-  "night-time stargazing",
-  "open air cinema",
-  "visiting a botanical garden",
-];
-
 const CreateUser: React.FC = () => {
   const [displayName, setDisplayName] = useState<string>("");
   const [option, setOption] = useState<string>("");
@@ -80,15 +32,40 @@ const CreateUser: React.FC = () => {
     getRandSuggestions(autoSuggestions)
   );
   const [_, setError] = useState<string>("");
+  const [userID, setUserID] = useState<string | undefined>(undefined);
+
   let [searchParams] = useSearchParams();
+  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+
   let roomID = searchParams.get("roomID") ?? "";
   const navigate = useNavigate();
-
   const roomURL = getRoomURL(roomID);
+  const userToken = roomID ? localStorage.getItem(roomID) : "";
+
+  useEffect(() => {
+    if (roomID && userToken && userToken.length != 0) {
+      const decoded = jwtDecode<TokenPayload>(userToken);
+      setUserID(decoded.user_id);
+    }
+  }, []);
+
+  const handleRegenSuggestions = () => {
+    if (scrollableDivRef.current) {
+      scrollableDivRef.current.scrollTo({
+        left: 0,
+        behavior: "smooth",
+      });
+    }
+    setSuggestions(getRandSuggestions(autoSuggestions));
+  };
 
   const requestCreateUserWithOption = async () => {
     if (displayName.length == 0 || option.length == 0) {
       toast.error("Please fill in required fields");
+      return;
+    }
+    if (displayName.length > 20 || option.length > 20) {
+      toast.error("Maximum of 20 characters");
       return;
     }
     try {
@@ -98,16 +75,29 @@ const CreateUser: React.FC = () => {
           displayName: displayName,
           optionContent: option,
         };
-        const response = await fetch(API_USER_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestBody),
-        });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+        if (userID) {
+          const response = await fetch(API_USER_ENDPOINT, {
+            method: "PUT",
+            headers: new Headers({
+              Authorization: "Bearer " + userToken,
+            }),
+            body: JSON.stringify(requestBody),
+          });
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+        } else {
+          const response = await fetch(API_USER_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody),
+          });
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const result: string = await response.json();
+          localStorage.setItem(roomID, result);
         }
-        const result: string = await response.json();
-        localStorage.setItem(roomID, result);
         navigate("/availability" + "?roomID=" + roomID);
       }
     } catch (err: any) {
@@ -118,16 +108,16 @@ const CreateUser: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-xl min-w-[200px] px-20">
+      <div className="w-full max-w-xl min-w-[200px] px-16">
         <div className="flex items-center pt-8 pb-20 relative">
-          <button className="flex absolute left-0">
-            <ArrowLeft />
-          </button>
-          <h1 className="text-2xl text-center mx-auto">Create User</h1>
+          <h1 className="text-2xl text-center mx-auto">
+            {userID ? "Update User" : "Create User"}
+          </h1>
         </div>
         <div>
           <h2>
-            Choose your display name: <span className="text-red-700">*</span>
+            {userID ? "Update your display name" : "Choose your display name"}:{" "}
+            <span className="text-red-700">*</span>
           </h2>
           <Input
             type="text"
@@ -147,9 +137,13 @@ const CreateUser: React.FC = () => {
             className="mb-4"
           />
           <div className="mb-4">
-            <div className="flex gap-2">
+            <div
+              ref={scrollableDivRef}
+              className="flex gap-2 overflow-x-auto scroll-smooth"
+            >
               {suggestions.map((suggestion) => (
                 <Button
+                  className="mb-1"
                   onClick={() => {
                     setOption(suggestion);
                   }}
@@ -158,13 +152,9 @@ const CreateUser: React.FC = () => {
                   {suggestion}
                 </Button>
               ))}
-            </div>
-            <div className="flex ">
               <Button
-                className="mt-4"
-                onClick={() =>
-                  setSuggestions(getRandSuggestions(autoSuggestions))
-                }
+                className="mb-1 min-w-[38px]"
+                onClick={handleRegenSuggestions}
                 variant="outline"
                 size="icon"
               >

@@ -17,7 +17,7 @@ const CopyURL: React.FC<Props> = ({ roomURL }) => {
       });
   };
   return (
-    <div className="pt-20">
+    <div className="pt-16">
       <button onClick={handleCopy}>
         <h3 className="flex text-lg ">
           Copy room link

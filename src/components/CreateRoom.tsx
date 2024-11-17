@@ -26,6 +26,10 @@ const CreateRoom: React.FC = () => {
       toast.error("Please fill in required fields");
       return;
     }
+    if (roomName.length > 20) {
+      toast.error("Maximum of 20 characters");
+      return;
+    }
     setLoading(true);
     try {
       const requestBody: CreateRoomRequest = { roomName };

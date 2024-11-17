@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { API_AVAILABILITY_ENDPOINT, getRoomURL } from "@/utils/constants";
 import CopyURL from "./ui/copyURL";
+import { ArrowLeft } from "lucide-react";
 
 export interface User {
   id: string;
@@ -28,7 +29,7 @@ const Availability: React.FC = () => {
 
   const roomURL = getRoomURL(roomID);
 
-  const requestCreateUserWithOption = async () => {
+  const requestAddAvailability = async () => {
     if (dates) {
       const formattedDates: string[] = dates?.map((value) => {
         return value.toISOString().split("T")[0];
@@ -61,19 +62,26 @@ const Availability: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="w-full max-w-xl min-w-[200px] px-10">
-        <h1 className="text-2xl text-center pt-8 pb-20">Availability</h1>
+        <div className="flex items-center pt-8 pb-20 relative">
+          <button
+            onClick={() => navigate("/create-user" + "?roomID=" + roomID)}
+            className="flex absolute left-0"
+          >
+            <ArrowLeft />
+          </button>
+          <h1 className="text-2xl text-center mx-auto">Availability</h1>
+        </div>
         <div className="flex justify-center items-center flex-col">
           <h2 className="mb-4 text-center">
             Choose your availability: <span className="text-red-700">*</span>
           </h2>
-
           <Calendar
             mode="multiple"
             selected={dates}
             onSelect={setDates}
             className="rounded-md border mx-auto mb-4"
           />
-          <Button className="max-w-min" onClick={requestCreateUserWithOption}>
+          <Button className="max-w-min" onClick={requestAddAvailability}>
             Continue
           </Button>
         </div>

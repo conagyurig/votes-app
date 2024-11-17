@@ -56,7 +56,7 @@ const Results: React.FC = () => {
   useEffect(() => {
     if (roomID && userToken && userToken.length != 0) {
       const decoded = jwtDecode<TokenPayload>(userToken);
-      setUserID(decoded.userID);
+      setUserID(decoded.user_id);
     }
   }, []);
 
