@@ -62,8 +62,6 @@ export function BarChartComponent({ dates }: BarChartProps) {
             <Bar
               dataKey="votes"
               strokeWidth={2}
-              radius={8}
-              activeIndex={2}
               activeBar={({ ...props }) => {
                 return (
                   <Rectangle

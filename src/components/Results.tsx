@@ -6,6 +6,7 @@ import { BarChartOption, BarChartProps } from "./ui/barChart";
 import { jwtDecode } from "jwt-decode";
 import { TokenPayload } from "./WaitToVote";
 import { HorizontalBarChartComponent } from "./ui/horizontalBarChart";
+import DotLoader from "react-spinners/DotLoader";
 
 interface Option {
   id: string;
@@ -118,6 +119,11 @@ const Results: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
+      {!roomState && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-white bg-opacity-70">
+          <DotLoader color={"#591c87"} />
+        </div>
+      )}
       <div className="w-full max-w-xl min-w-[200px] px-2">
         <h1 className="text-2xl text-center pt-8 pb-10">Results</h1>
         <div>
@@ -172,9 +178,8 @@ function constructBarChartProps(datesState: DatesState) {
       date: dateVotes.date.split("-")[1] + "/" + dateVotes.date.split("-")[2],
       votes: dateVotes.users.length,
     };
-    if (barChartOption.votes > 1) {
-      barChartProps.dates.push(barChartOption);
-    }
+
+    barChartProps.dates.push(barChartOption);
   });
   return barChartProps;
 }

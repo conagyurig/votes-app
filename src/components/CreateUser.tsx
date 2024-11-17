@@ -107,7 +107,7 @@ const CreateUser: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="pt-topPadding flex justify-center min-h-screen">
       <div className="w-full max-w-xl min-w-[200px] px-16">
         <div className="flex items-center pt-8 pb-20 relative">
           <h1 className="text-2xl text-center mx-auto">
@@ -162,7 +162,7 @@ const CreateUser: React.FC = () => {
               </Button>
             </div>
           </div>
-          <div className="flex justify-start ">
+          <div className="flex justify-start pt-6">
             <Button
               className="rounded-full"
               onClick={requestCreateUserWithOption}
@@ -170,8 +170,10 @@ const CreateUser: React.FC = () => {
               Continue
             </Button>
           </div>
+          <div className="flex justify-center pt-10">
+            <CopyURL roomURL={roomURL} />
+          </div>
         </div>
-        <CopyURL roomURL={roomURL} />
       </div>
     </div>
   );

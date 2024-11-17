@@ -16,6 +16,9 @@ export default {
       fontFamily: {
         sans: ["Roboto", "sans-serif"],
       },
+      spacing: {
+        topPadding: "10vh",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

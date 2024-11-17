@@ -60,7 +60,7 @@ const Availability: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="pt-topPadding flex justify-center min-h-screen">
       <div className="w-full max-w-xl min-w-[200px] px-10">
         <div className="flex items-center pt-8 pb-20 relative">
           <button
@@ -84,8 +84,6 @@ const Availability: React.FC = () => {
           <Button className="max-w-min" onClick={requestAddAvailability}>
             Continue
           </Button>
-        </div>
-        <div>
           <CopyURL roomURL={roomURL} />
         </div>
       </div>

@@ -8,6 +8,8 @@ import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import CopyURL from "./ui/copyURL";
 import { getRoomURL } from "@/utils/constants";
+import DotLoader from "react-spinners/DotLoader";
+import { ArrowLeft } from "lucide-react";
 
 interface Option {
   id: string;
@@ -153,12 +155,27 @@ const WaitToVotePage: React.FC = () => {
   }, [roomState]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-xl min-w-[200px] px-20">
-        <h1 className="text-2xl text-center pt-8 pb-20">Vote</h1>
-        {roomState && (
+    <div className="pt-topPadding flex justify-center min-h-screen">
+      {!roomState && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-white bg-opacity-70">
+          <DotLoader color={"#591c87"} />
+        </div>
+      )}
+      {roomState && (
+        <div className="w-full max-w-xl min-w-[200px] px-20">
+          <div className="flex items-center pt-8 pb-20 relative">
+            <button
+              onClick={() => navigate("/availability" + "?roomID=" + roomID)}
+              className="flex absolute left-0"
+            >
+              <ArrowLeft />
+            </button>
+            <h1 className="text-2xl text-center mx-auto">
+              {toTitleCase(roomState.roomName)}
+            </h1>
+          </div>
           <div className="flex justify-center items-center flex-col">
-            <h2 className="text-lg mb-4">{"Room: " + roomState.roomName}</h2>
+            <h2 className="text-lg mb-4">Select your vote:</h2>
             <div className="">
               <RadioGroup
                 value={option}
@@ -205,12 +222,19 @@ const WaitToVotePage: React.FC = () => {
             <Button className="mt-10 max-w-min" onClick={revealVotes}>
               Reveal Votes
             </Button>
+            <CopyURL roomURL={roomURL} />
           </div>
-        )}
-        <CopyURL roomURL={roomURL} />
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default WaitToVotePage;
+
+function toTitleCase(str: String) {
+  return str.replace(
+    /\w\S*/g,
+    (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+  );
+}
