@@ -5,15 +5,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { API_ROOMS_ENDPOINT } from "@/utils/constants";
 import toast from "react-hot-toast";
-
-export interface Room {
-  id: string;
-  name: string;
-}
-
-export interface CreateRoomRequest {
-  roomName: string;
-}
+import { CreateRoomRequest, Room } from "@/utils/types";
 
 const CreateRoom: React.FC = () => {
   const [roomName, setRoomName] = useState<string>("");

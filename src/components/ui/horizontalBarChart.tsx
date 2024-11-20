@@ -78,6 +78,7 @@ export function HorizontalBarChartComponent({ dates }: BarChartProps) {
   );
 }
 
+//sorts options by vote count and adds colour index to form gradient across options
 function normaliseColours(barChartProps: BarChartOption[]) {
   const n = barChartProps.length;
   let data = barChartProps;

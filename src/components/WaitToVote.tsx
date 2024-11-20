@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { jwtDecode } from "jwt-decode";
-import { User } from "./CreateUser";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
@@ -10,32 +9,7 @@ import CopyURL from "./ui/copyURL";
 import { getRoomURL } from "@/utils/constants";
 import DotLoader from "react-spinners/DotLoader";
 import { ArrowLeft } from "lucide-react";
-
-interface Option {
-  id: string;
-  roomId: string;
-  userId: string;
-  content: string;
-}
-
-interface Vote {
-  id: string;
-  optionId: string;
-  userId: string;
-}
-
-interface RoomState {
-  roomName: string;
-  users: User[];
-  options: Option[];
-  votes: Vote[];
-  revealVotes: boolean;
-}
-
-export interface TokenPayload {
-  user_id: string;
-  room_id: string;
-}
+import { RoomState, TokenPayload } from "@/utils/types";
 
 const WaitToVotePage: React.FC = () => {
   const [roomState, setRoomState] = useState<RoomState | undefined>(undefined);

@@ -9,21 +9,9 @@ import {
 } from "@/utils/constants";
 import toast from "react-hot-toast";
 import CopyURL from "./ui/copyURL";
-import { ArrowLeft, RefreshCwIcon } from "lucide-react";
+import { RefreshCwIcon } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
-import { TokenPayload } from "./WaitToVote";
-
-export interface User {
-  id: string;
-  roomId: string;
-  name: string;
-}
-
-export interface CreateUserRequest {
-  roomID: string;
-  displayName: string;
-  optionContent: string;
-}
+import { CreateUserRequest, TokenPayload } from "@/utils/types";
 
 const CreateUser: React.FC = () => {
   const [displayName, setDisplayName] = useState<string>("");

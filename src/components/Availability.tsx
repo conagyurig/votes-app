@@ -5,17 +5,7 @@ import { Calendar } from "./ui/calendar";
 import { API_AVAILABILITY_ENDPOINT, getRoomURL } from "@/utils/constants";
 import CopyURL from "./ui/copyURL";
 import { ArrowLeft } from "lucide-react";
-
-export interface User {
-  id: string;
-  roomId: string;
-  name: string;
-}
-
-export interface CreateAvailabilityRequest {
-  roomID: string;
-  dates: string[];
-}
+import { CreateAvailabilityRequest } from "@/utils/types";
 
 const Availability: React.FC = () => {
   const [dates, setDates] = React.useState<Date[] | undefined>([]);

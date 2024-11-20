@@ -1,42 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { User } from "./CreateUser";
 import { useSearchParams } from "react-router-dom";
 import { ChartOption, PieChartComponent, PieChartProps } from "./ui/pie-chart";
 import { BarChartOption, BarChartProps } from "./ui/barChart";
 import { jwtDecode } from "jwt-decode";
-import { TokenPayload } from "./WaitToVote";
 import { HorizontalBarChartComponent } from "./ui/horizontalBarChart";
 import DotLoader from "react-spinners/DotLoader";
-
-interface Option {
-  id: string;
-  roomId: string;
-  userId: string;
-  content: string;
-}
-
-interface Vote {
-  id: string;
-  optionId: string;
-  userId: string;
-}
-
-interface RoomState {
-  roomName: string;
-  users: User[];
-  options: Option[];
-  votes: Vote[];
-}
-
-interface DatesState {
-  roomId: string;
-  dates: DatesWithUsers[];
-}
-
-interface DatesWithUsers {
-  date: string;
-  users: string[];
-}
+import { DatesState, RoomState, TokenPayload } from "@/utils/types";
 
 const Results: React.FC = () => {
   const [roomState, setRoomState] = useState<RoomState | undefined>(undefined);
