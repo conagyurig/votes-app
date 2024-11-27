@@ -8,10 +8,7 @@ export const API_AVAILABILITY_ENDPOINT = "/api/userAvailability";
 //   "http://localhost:8080/userAvailability";
 
 export function getRoomURL(roomID: String) {
-  return (
-    "https://whenru3-be-252801953050.europe-west2.run.app/create-user?roomID=" +
-    roomID
-  );
+  return "https://whenareufree.com/create-user?roomID=" + roomID;
 }
 
 export const autoSuggestions = [
