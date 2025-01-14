@@ -45,7 +45,7 @@ export function HorizontalBarChartComponent({ dates }: BarChartProps) {
   return (
     <Card>
       <CardHeader className="items-center pb-5">
-        <CardTitle>When you are free</CardTitle>
+        <CardTitle>Top 5 Dates</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -99,9 +99,10 @@ function normaliseColours(barChartProps: BarChartOption[]) {
   }
 
   const maxVote = data[0].votes;
+  data = data.slice(0, 5);
   let result = [];
 
-  for (let j = 0; j < n; j++) {
+  for (let j = 0; j < 5; j++) {
     const colour =
       5 - (maxVote - data[j].votes) > 0 ? 5 - (maxVote - data[j].votes) : 1;
     const obj = { date: data[j].date, votes: data[j].votes, colour: colour };

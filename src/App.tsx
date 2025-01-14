@@ -5,6 +5,7 @@ import CreateUser from "./components/CreateUser";
 import WaitToVotePage from "./components/WaitToVote";
 import Results from "./components/Results";
 import Availability from "./components/Availability";
+import Dates from "./components/Dates";
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
         <Route path="/availability" element={<Availability />} />
         <Route path="/wait-to-vote" element={<WaitToVotePage />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/dates" element={<Dates />} />
       </Routes>
     </Router>
   );

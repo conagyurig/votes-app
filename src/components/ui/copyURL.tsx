@@ -23,7 +23,6 @@ const CopyURL: React.FC<Props> = ({ roomURL }) => {
           Copy room link
           <Copy className="mx-2" />
         </h3>
-        <div> </div>
       </button>
     </div>
   );

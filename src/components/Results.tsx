@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChartOption, PieChartComponent, PieChartProps } from "./ui/pie-chart";
 import { BarChartOption, BarChartProps } from "./ui/barChart";
 import { jwtDecode } from "jwt-decode";
@@ -22,6 +22,7 @@ const Results: React.FC = () => {
   let [searchParams] = useSearchParams();
   let roomID = searchParams.get("roomID");
   const userToken = roomID ? localStorage.getItem(roomID) : "";
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (roomID && userToken && userToken.length != 0) {
@@ -94,25 +95,26 @@ const Results: React.FC = () => {
         </div>
       )}
       <div className="w-full max-w-xl min-w-[200px] px-2">
-        <h1 className="text-2xl text-center pt-8 pb-10">Results</h1>
-        <div>
-          {roomState && (
-            <div>
+        {roomState && (
+          <div>
+            <div className="mb-4">
+              {pieChartProps && <PieChartComponent {...pieChartProps} />}
+            </div>
+            {barChartProps && (
               <div className="mb-4">
-                {pieChartProps && <PieChartComponent {...pieChartProps} />}
+                <HorizontalBarChartComponent {...barChartProps} />
               </div>
-            </div>
-          )}
-          {datesState && (
+            )}
             <div>
-              {barChartProps && (
-                <div>
-                  <HorizontalBarChartComponent {...barChartProps} />
-                </div>
-              )}
+              <button
+                onClick={() => navigate("/dates" + "?roomID=" + roomID)}
+                className="flex absolute right-5"
+              >
+                See all dates
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
